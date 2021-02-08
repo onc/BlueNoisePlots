@@ -34,7 +34,6 @@ def __jitter_sampler(N, scale_domain=1.0):
             i = x * gridsize + y
             sampler[i][0] = (x + np.random.random_sample()) / gridsize
             sampler[i][1] = (y + np.random.random_sample()) / gridsize
-        #print(sampler[i][0],sampler[i][1])
     sampler[:, 0] *= scale_domain
     return sampler
 
@@ -54,11 +53,8 @@ def apply_jitter(data, aspect_ratio_scaling, centralized=False):
     """
     point_count = len(data)
 
-    y = np.random.uniform(0, aspect_ratio_scaling, point_count)
-    y = np.asarray(y, dtype=np.float32).reshape((point_count, 1))
-
-    jittered_x = np.zeros((y.size, 2))
-    jittered_x[:, 0] = y[:, 0]
+    jittered_x = np.zeros((data.size, 2))
+    jittered_x[:, 0] = np.random.uniform(0, aspect_ratio_scaling, point_count)
     jittered_x[:, 1] = data
 
     if not centralized:
@@ -102,9 +98,9 @@ def __generate_adaptive_random_samples(input_points, aspect_ratio_scaling, centr
 
     if not centralized:
         y_grid = np.linspace(0, 1, num_samples)
+        x = np.random.uniform(0, aspect_ratio_scaling, num_samples)
         y = np.random.choice(y_grid, size=num_samples,
                              p=norm_pdf / np.sum(norm_pdf))
-        x = np.random.uniform(0, aspect_ratio_scaling, num_samples)
 
         orig_sites = np.zeros((num_samples, 2))
         orig_sites[:, 0] = x
@@ -150,27 +146,29 @@ def __compute_voronoi_regions(points_per_site, points):
     return tf.math.argmin(dist, axis=1)
 
 
-def __compute_centroids(voronoi, points_index_tensor, sites_per_point, ones, zeros, num_points, num_sites, num_dims_per_points):
+def __compute_centroids(voronoi, points_index_tensor, sites_per_point, ones, zeros, num_points,
+                        num_sites, num_dims_per_points):
     # compute centroids
     mask = tf.math.equal(points_index_tensor, voronoi)
     mask_tiles = tf.tile(mask, [1, 1, num_dims_per_points])
     sites_mask = tf.reshape(mask_tiles, [num_points, num_sites, num_dims_per_points])
-    masked_sites_sum = tf.squeeze(tf.math.reduce_sum(tf.where(sites_mask, sites_per_point, zeros), axis=1, keepdims=True))
-    counts = tf.split(tf.squeeze(tf.reduce_sum(tf.where(sites_mask, ones, zeros), axis=1, keepdims=True)), num_dims_per_points, axis=1)[0]
+    masked_sites_sum = tf.squeeze(tf.math.reduce_sum(tf.where(sites_mask, sites_per_point, zeros),
+                                                     axis=1, keepdims=True))
+    counts = tf.split(tf.squeeze(tf.reduce_sum(tf.where(sites_mask, ones, zeros),
+                                               axis=1, keepdims=True)),
+                      num_dims_per_points, axis=1)[0]
     return tf.math.divide(masked_sites_sum, counts)
 
 
-def blue_noise_single_class(input_points, aspect_ratio_scaling, distance_meassure,
+def blue_noise_single_class(input_points, aspect_ratio_scaling,
                             centralized=False, num_samples_per_dim=100 ** 2,
-                            max_iterations=100):
+                            max_iterations=200):
     points = apply_jitter(input_points, aspect_ratio_scaling,
                           centralized)
-
     sites = __generate_adaptive_random_samples(input_points,
-                                                 aspect_ratio_scaling,
-                                                 centralized,
-                                                 num_samples_per_dim)
-    # sites = __jitter_sampler(num_samples_per_dim, aspect_ratio_scaling)
+                                               aspect_ratio_scaling,
+                                               centralized,
+                                               num_samples_per_dim)
 
     points = tf.convert_to_tensor(points, dtype=tf.float32)
     sites = tf.convert_to_tensor(sites, dtype=tf.float32)
@@ -199,12 +197,50 @@ def blue_noise_single_class(input_points, aspect_ratio_scaling, distance_meassur
     for i in range(max_iterations):
         voronoi = __compute_voronoi_regions(points_per_site, points)
 
-        centroids = __compute_centroids(voronoi, points_index_tensor, sites_per_point, ones, zeros, num_points, num_sites, num_dims_per_points)
+        centroids = __compute_centroids(voronoi, points_index_tensor, sites_per_point, ones, zeros,
+                                        num_points, num_sites, num_dims_per_points)
 
-        y = tf.split(centroids, num_or_size_splits=2, axis=1)[1];
-        points = tf.squeeze(tf.stack([original_values, y], axis=1));
+        x, y = tf.split(centroids, num_or_size_splits=2, axis=1)
+        isOutsidePlot = tf.math.is_nan(y)
+        correctedY = tf.where(isOutsidePlot, tf.constant([aspect_ratio_scaling / 2.0], dtype=tf.float32), y)
+
+        # put the relax point, back to it's original data-dimension.
+        points = tf.squeeze(tf.stack([original_values, correctedY], axis=1));
 
     return points.numpy()
+
+
+def mc_compute_centroids(samples, voronoi, original_y):
+    num_points = len(original_y)
+    num_samples = len(samples)
+
+    centroids = np.zeros((num_points, 2))
+    counter = np.zeros(num_points)
+
+    for p in range(num_samples):
+        siteIndex = int(voronoi[p])
+        centroids[siteIndex] += samples[p]
+        counter[siteIndex] += 1
+
+    centroids = np.array([np.divide(centroid,
+                                    count,
+                                    out=np.zeros_like(centroid),
+                                    where=count != 0)
+                          for centroid, count in zip(centroids, counter)])
+
+    # To keep the y-coordinate unchanged, revert it back to the initial value
+    centroids[:, 1] = original_y
+    return centroids
+
+
+def mc_get_closest_site_index(sample, sites):
+    reshaped_samples = np.tile(sample, (sites.shape[0], 1))
+    diff = sites - reshaped_samples
+    return np.argmin((2 * np.fabs(diff[:, 0])) + np.fabs(diff[:, 1]))
+
+
+mc_compute_voronoi_regions = np.vectorize(mc_get_closest_site_index,
+                                         signature='(n),(m,n)->()')
 
 
 def blue_noise_multi_class(data, aspect_ratio_scaling, centralized,
@@ -212,18 +248,13 @@ def blue_noise_multi_class(data, aspect_ratio_scaling, centralized,
                            iteration_step_cb=None):
     jittered_points = apply_jitter(data['points'], aspect_ratio_scaling,
                                    centralized)
-    samples = __generate_adaptive_random_samples(data['points'],
-                                                 num_samples_per_dim,
-                                                 aspect_ratio_scaling,
-                                                 centralized)
-    num_samples = len(samples)
+    sites = __generate_adaptive_random_samples(data['points'],
+                                               aspect_ratio_scaling,
+                                               centralized,
+                                               num_samples_per_dim)
 
     points = copy.deepcopy(jittered_points)
-    voronoi = np.zeros(num_samples)
-
-    # setting the absolute and relative tolerance
-    rtol = 1e-05
-    atol = 1e-07
+    voronoi = np.zeros(len(sites))
 
     # Lloyd iterations
     for itr in range(max_iterations):
@@ -235,27 +266,23 @@ def blue_noise_multi_class(data, aspect_ratio_scaling, centralized,
             end_index = start_index + num_elements
             elements = points[start_index:end_index]
 
-            class_voronoi = regions_fn(samples, points)
+            class_voronoi = mc_compute_voronoi_regions(sites, elements)
 
             # update the sites to the centroids of their voronoi regions of the i-th  class
-            class_centroids[start_index:end_index] = __compute_centroids(samples,
-                                                                         class_voronoi,
-                                                                         elements[:, 1])
+            class_centroids[start_index:end_index] = mc_compute_centroids(sites,
+                                                                          class_voronoi,
+                                                                          elements[:, 1])
             # iteration_step_cb(itr, voronoi, original_samples, elements, rgb)
             start_index += num_elements
 
         # class-wise centroids are computed, replace points with that
         points = class_centroids
 
-        # compute the voronoi for all the samples
-        voronoi = regions_fn(samples, points)
+        # compute the voronoi for all the sites
+        voronoi = mc_compute_voronoi_regions(sites, points)
 
         # update all the sites to the centroids of their voronoi regions
-        centroids = __compute_centroids(samples, voronoi, data['points'])
-
-        # points can't be relaxed any more
-        if np.allclose(centroids, points, rtol, atol):
-            break
+        centroids = mc_compute_centroids(sites, voronoi, data['points'])
 
         points = centroids
 
