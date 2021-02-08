@@ -140,9 +140,24 @@ def __generate_adaptive_random_samples(input_points, aspect_ratio_scaling, centr
 
 
 def __compute_voronoi_regions(points_per_site, points):
-    # compute the voronoi with existing samples
+    """ Generates samples for Lloyd relaxation, following the density distribution of the input
+    data.
+
+    Args:
+        input_points (List[float]): 1D-Array of values.: 1D-Array of values.
+        scaling (float): Aspect ratio scaling, computed by using our adaptive height method.
+        centralized (bool): Whether the samples should follow the density of the points in height
+            as well to generate the samples in a violin plot like fashion.
+        num_samples (int): Number of samples for the pdf. Defaults to 8192.
+        bandwidth (int): Bandwith for the kernel density estimation. This value is passed
+            to `kde.factor`, used by `scipy.stats.gaussian_kde`. Defaults to 0.2.
+
+    Returns:
+        List[List[float]] 2D-Array, of samples to be used for Lloyd relaxation.
+    """
     diff = tf.math.subtract(points_per_site, points)
-    dist = tf.math.sqrt(tf.norm(diff, axis=2, keepdims=True))
+    dist = tf.norm(tf.math.multiply(diff, tf.constant([2, 1], dtype=tf.float32)),
+                   ord=1, axis=2, keepdims=True)
     return tf.math.argmin(dist, axis=1)
 
 

@@ -6,7 +6,7 @@ Python implementation of *Blue Noise Plots*, a novel replacement for jitter plot
 
 ![Teaser](https://raw.githubusercontent.com/onc/BlueNoisePlots/master/images/Teaser.png)
 
-[Paper]() [Project Page]()
+[Paper Preprint]() [Project Page]()
 
 ## Prerequisites
 
@@ -22,6 +22,8 @@ pip install -r requirements.txt
 ## Usage
 
 ```python
+from blue_noise_plot import blue_noise
+
 # Load data
 mpg_filename = 'csv_data/auto-mpg.data'
 column_names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight',
@@ -30,9 +32,9 @@ mpg = pd.read_csv(mpg_filename, delim_whitespace=True, names=column_names)
 subset = mpg[mpg['cylinders'].isin([4, 6, 8])]
 
 # Draw
-blue_noise(x='mpg', hue='cylinders', data=subset, orient='h', size=20, filename='covid_bnp.png')
+blue_noise(x='mpg', hue='cylinders', data=subset, orient='h', size=20, filename=mpg-blue_noise_plot.png')
 ```
 
 ## Examples
 
-![Teaser](https://raw.githubusercontent.com/onc/BlueNoisePlots/master/images/Examples.png)
+![Blue Noise Plot examples](https://raw.githubusercontent.com/onc/BlueNoisePlots/master/images/Examples.png)
