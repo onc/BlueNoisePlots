@@ -9,10 +9,9 @@ from gapminder import gapminder
 import matplotlib
 
 sys.path.append('..')
-
 from blue_noise_plot import jitter, blue_noise
 
-IMAGE_FOLDER = Path('examples')
+IMAGE_FOLDER = Path('example_plots')
 FILE_TYPE = '.png'
 
 np.set_printoptions(suppress=True)

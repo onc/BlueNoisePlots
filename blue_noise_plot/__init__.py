@@ -69,6 +69,32 @@ def __prepare_data(x=None, hue=None, data=None):
 def __plot(x=None, hue=None, data=None, dodge=False,
            orient=None, color='black', palette='tab10', size=3,
            centralized=False, filename='', scaling=10, method=''):
+    """ Renders a plot from the given data.
+
+    Args:
+        x (str in data): Variables that specify positions on the data-encoding axes.
+        hue (str in data): Optional. Grouping variable that will produce points with different
+                           colors.
+        data (pandas.DataFrame): Input data structure. Long-form collection of vectors that can be
+                                 assigned to named variables.
+        dodge (boolean): Optional. Wether to dodge the categorical classes of the plot.
+                         Defaults to False.
+        orient ("v" | "h"): Optional. Orientation of the plot (vertical or horizontal).
+                            Defaults to 'v'.
+        color (str): Color to use for markers, in case there is only one class (hue not given).
+                     Defaults to 'black'.
+        palette (str): Method for choosing the colors to use when mapping the hue semantic.
+                       String values are passed to color_palette(). List or dict values imply
+                       categorical mapping, while a colormap object implies numeric mapping.
+                       Defaults to 'tab10'.
+        size (float): The marker size in points**2.
+        centralized (boolean): Optional. Where the plot should be centralized or not.
+                               Defaults to False.
+        filename (str): Filename of the plot.
+        scaling (int): Optional. Scaling for the size of plot.
+                       Defaults to 10 for a 740 pixel lot (long side).
+        method (str): Type of the plot to draw. Either 'jitter' or 'blue_noise'.
+    """
     dodge_margin = 0.1
 
     prepared_data = __prepare_data(x=x, hue=hue, data=data)
@@ -166,16 +192,66 @@ def __plot(x=None, hue=None, data=None, dodge=False,
     plt.close()
 
 
-def jitter(x=None, hue=None, data=None, dodge=False, orient=None,
+def jitter(x=None, hue=None, data=None, dodge=False, orient='v',
            color='black', palette='tab10', size=3, filename='', scaling=10):
+    """ Renders a Jitter Plot from the given data.
+
+    Args:
+        x (str in data): Variables that specify positions on the data-encoding axes.
+        hue (str in data): Optional. Grouping variable that will produce points with different
+                           colors.
+        data (pandas.DataFrame): Input data structure. Long-form collection of vectors that can be
+                                 assigned to named variables.
+        dodge (boolean): Optional. Wether to dodge the categorical classes of the plot.
+                         Defaults to False.
+        orient ("v" | "h"): Optional. Orientation of the plot (vertical or horizontal).
+                            Defaults to 'v'.
+        color (str): Color to use for markers, in case there is only one class (hue not given).
+                     Defaults to 'black'.
+        palette (str): Method for choosing the colors to use when mapping the hue semantic.
+                       String values are passed to color_palette(). List or dict values imply
+                       categorical mapping, while a colormap object implies numeric mapping.
+                       Defaults to 'tab10'.
+        size (float): The marker size in points**2.
+        centralized (boolean): Optional. Where the plot should be centralized or not.
+                               Defaults to False.
+        filename (str): Filename of the plot.
+        scaling (int): Optional. Scaling for the size of plot.
+                       Defaults to 10 for a 740 pixel lot (long side).
+    """
     __plot(x=x, hue=hue, data=data, dodge=dodge, orient=orient,
            color=color, palette=palette, size=size, filename=filename,
            scaling=scaling, method='jitter')
 
 
-def blue_noise(x=None, hue=None, data=None, dodge=False, orient=None,
+def blue_noise(x=None, hue=None, data=None, dodge=False, orient='v',
                color='black', palette='tab10', size=3, centralized=False,
                filename='', scaling=10):
+    """ Renders a *Blue Noise Plot* from the given data.
+
+    Args:
+        x (str in data): Variables that specify positions on the data-encoding axes.
+        hue (str in data): Optional. Grouping variable that will produce points with different
+                           colors.
+        data (pandas.DataFrame): Input data structure. Long-form collection of vectors that can be
+                                 assigned to named variables.
+        dodge (boolean): Optional. Wether to dodge the categorical classes of the plot.
+                         Defaults to False.
+        orient ("v" | "h"): Optional. Orientation of the plot (vertical or horizontal).
+                            Defaults to 'v'.
+        color (str): Color to use for markers, in case there is only one class (hue not given).
+                     Defaults to 'black'.
+        palette (str): Method for choosing the colors to use when mapping the hue semantic.
+                       String values are passed to color_palette(). List or dict values imply
+                       categorical mapping, while a colormap object implies numeric mapping.
+                       Defaults to 'tab10'.
+        size (float): The marker size in points**2.
+        centralized (boolean): Optional. Where the plot should be centralized or not.
+                               Defaults to False.
+        filename (str): Filename of the plot.
+        scaling (int): Optional. Scaling for the size of plot.
+                       Defaults to 10 for a 740 pixel lot (long side).
+    """
     __plot(x=x, hue=hue, data=data, dodge=dodge, orient=orient,
            color=color, palette=palette, size=size, centralized=centralized,
            filename=filename, scaling=scaling, method='blue_noise')
