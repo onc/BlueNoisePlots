@@ -2,11 +2,11 @@
 
 Python implementation of *Blue Noise Plots*, a novel replacement for jitter plots, published at Eurographics 2021.
 
-[C. van Onzenoodt](https://www.uni-ulm.de/en/in/mi/institute/staff/christian-van-onzenoodt/), [G. Singh](https://people.mpi-inf.mpg.de/~gsingh/), [T. Ropinski](https://www.uni-ulm.de/in/mi/institut/mitarbeiter/timo-ropinski/), [T. Ritschel](http://www.homepages.ucl.ac.uk/~ucactri/), 
+[C. van Onzenoodt](https://www.uni-ulm.de/en/in/mi/institute/staff/christian-van-onzenoodt/), [G. Singh](https://people.mpi-inf.mpg.de/~gsingh/), [T. Ropinski](https://www.uni-ulm.de/in/mi/institut/mitarbeiter/timo-ropinski/), and [T. Ritschel](http://www.homepages.ucl.ac.uk/~ucactri/)
 
 ![Teaser](https://raw.githubusercontent.com/onc/BlueNoisePlots/main/images/Teaser.png)
 
-[Paper Preprint](https://arxiv.org/abs/2102.04072) 
+[Paper Pre-Print](https://arxiv.org/abs/2102.04072) 
 
 [Project Page](https://www.uni-ulm.de/in/mi/mi-forschung/viscom/publikationen?category=publication&publication_id=195)
 
