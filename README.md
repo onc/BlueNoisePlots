@@ -4,7 +4,7 @@ Python implementation of *Blue Noise Plots*, a novel replacement for jitter plot
 
 [C. van Onzenoodt](https://www.uni-ulm.de/en/in/mi/institute/staff/christian-van-onzenoodt/), [G. Singh](https://people.mpi-inf.mpg.de/~gsingh/), [T. Ropinski](https://www.uni-ulm.de/in/mi/institut/mitarbeiter/timo-ropinski/), [T. Ritschel](http://www.homepages.ucl.ac.uk/~ucactri/), 
 
-![Teaser](https://raw.githubusercontent.com/onc/BlueNoisePlots/master/images/Teaser.png)
+![Teaser](https://raw.githubusercontent.com/onc/BlueNoisePlots/main/images/Teaser.png)
 
 [Paper Preprint](https://arxiv.org/abs/2102.04072) [Project Page]()
 
@@ -55,7 +55,7 @@ blue_noise(x='mpg', hue='cylinders', data=subset, dodge=True,
 
 ## Examples
 
-![Blue Noise Plot examples](https://raw.githubusercontent.com/onc/BlueNoisePlots/master/images/Examples.png)
+![Blue Noise Plot examples](https://raw.githubusercontent.com/onc/BlueNoisePlots/main/images/Examples.png)
 
 To generate the examples, run the following:
 
