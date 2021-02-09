@@ -14,7 +14,7 @@ This implementation uses tensorflow to enable hardware acceleration on supported
 
 * Python 3.5–3.8
 * Ubuntu 16.04 or later
-* Windows 7
+* Windows 7 or later
 * macOS 10.12.6 (Sierra) or later (no GPU support)
 
 ### Install dependencies
