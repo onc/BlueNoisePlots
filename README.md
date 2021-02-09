@@ -6,7 +6,9 @@ Python implementation of *Blue Noise Plots*, a novel replacement for jitter plot
 
 ![Teaser](https://raw.githubusercontent.com/onc/BlueNoisePlots/main/images/Teaser.png)
 
-[Paper Preprint](https://arxiv.org/abs/2102.04072) [Project Page]()
+[Paper Preprint](https://arxiv.org/abs/2102.04072) 
+
+[Project Page](https://www.uni-ulm.de/in/mi/mi-forschung/viscom/publikationen?category=publication&publication_id=195)
 
 ## Prerequisites
 
