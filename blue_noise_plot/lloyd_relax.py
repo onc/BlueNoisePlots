@@ -188,7 +188,7 @@ def blue_noise_single_class(input_points, aspect_ratio_scaling,
     points = tf.convert_to_tensor(points, dtype=tf.float32)
     sites = tf.convert_to_tensor(sites, dtype=tf.float32)
 
-    original_values = tf.split(points, num_or_size_splits=2, axis=1)[0]
+    original_values = tf.split(points, num_or_size_splits=2, axis=1)[1]
 
     num_points = tf.shape(points).numpy()[0]
     num_dims_per_points = tf.shape(points).numpy()[1]
@@ -216,11 +216,11 @@ def blue_noise_single_class(input_points, aspect_ratio_scaling,
                                         num_points, num_sites, num_dims_per_points)
 
         x, y = tf.split(centroids, num_or_size_splits=2, axis=1)
-        isOutsidePlot = tf.math.is_nan(y)
-        correctedY = tf.where(isOutsidePlot, tf.constant([aspect_ratio_scaling / 2.0], dtype=tf.float32), y)
+        isOutsidePlot = tf.math.is_nan(x)
+        correctedX = tf.where(isOutsidePlot, tf.constant([aspect_ratio_scaling / 2.0], dtype=tf.float32), x)
 
         # put the relax point, back to it's original data-dimension.
-        points = tf.squeeze(tf.stack([original_values, correctedY], axis=1));
+        points = tf.squeeze(tf.stack([correctedX, original_values], axis=1))
 
     return points.numpy()
 
