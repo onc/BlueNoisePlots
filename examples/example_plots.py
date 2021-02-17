@@ -274,6 +274,25 @@ def example_plots(orient, size, num_example):
 
     plot(num_example)
 
+    # basic plot without rendering
+    dataset = { 'name': 'geyser', 'x': 'duration' }
+    data = sns.load_dataset(dataset['name'])
+    data = data.dropna(subset=[dataset['x']])
+    sub = data.sample(n=256, replace=False)
+    points = blue_noise(x=dataset['x'], data=sub, orient=orient)
+    print('num classes: ', len(points))
+
+    blue_noise(x=dataset['x'], data=sub, filename='geyser-duration.png', orient=orient)
+    blue_noise(x=dataset['x'], data=sub, plot_width=0.7, filename='geyser-duration-high.png', orient=orient)
+
+    dataset = { 'name': 'penguins', 'x': 'bill_length_mm', 'hue': 'sex' }
+    data = sns.load_dataset(dataset['name'])
+    data = data.dropna(subset=[dataset['x']])
+    sub = data.sample(n=256, replace=False)
+    points = blue_noise(x=dataset['x'], hue=dataset['hue'], data=sub, orient=orient)
+    print('num classes: ', len(points))
+
+
 def main():
     orient = 'h'
     marker_size = 20
