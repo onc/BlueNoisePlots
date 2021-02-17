@@ -57,7 +57,8 @@ points = blue_noise(x='mpg', hue='cylinders', data=subset, orient='h')
 points = blue_noise(x='mpg', hue='cylinders', data=subset, orient='h', plot_width=0.3)
 
 # Render png of the distribution
-blue_noise(x='mpg', hue='cylinders', data=subset, orient='h', size=20, filename='mpg-blue_noise_plot.png')
+blue_noise(x='mpg', hue='cylinders', data=subset, orient='h', size=20, 
+           filename='mpg-blue_noise_plot.png')
 ```
 
 ## Advanced Usage
