@@ -89,10 +89,19 @@ def __plot(x=None, hue=None, data=None, dodge=False, orient=None, color='black',
         size (float): The marker size in points**2.
         centralized (boolean): Optional. Where the plot should be centralized or not.
                                Defaults to False.
-        filename (str): Filename of the plot.
+        plot_width (float): Optional. Width of the plot. This is a ratio, assuming the encoding axis
+                            is between 0 and 1. So, 0.2 for plot_width would give you a plot with is
+                            5 times as wide in the encoding axis as in the non-encoding axis.
+        filename (str): Optional. Filename of the plot to render.
         scaling (int): Optional. Scaling for the size of plot.
                        Defaults to 10 for a 740 pixel lot (long side).
         method (str): Type of the plot to draw. Either 'jitter' or 'blue_noise'.
+
+    Returns:
+        List[List[[float, float]]] 2D-Array, relaxed points. Here the first dimension of the array
+                          encodes the clases in the data. So for a single-class blue noise plot,
+                          len(blue_noise_plot) would be 1.
+                          Each of these arrays contains arrays with points within this class.
     """
     dodge_margin = 0.1
 
@@ -225,9 +234,18 @@ def jitter(x=None, hue=None, data=None, dodge=False, orient='v', plot_width=None
         size (float): The marker size in points**2.
         centralized (boolean): Optional. Where the plot should be centralized or not.
                                Defaults to False.
-        filename (str): Filename of the plot.
+        plot_width (float): Optional. Width of the plot. This is a ratio, assuming the encoding axis
+                            is between 0 and 1. So, 0.2 for plot_width would give you a plot with is
+                            5 times as wide in the encoding axis as in the non-encoding axis.
+        filename (str): Optional. Filename of the plot to render.
         scaling (int): Optional. Scaling for the size of plot.
                        Defaults to 10 for a 740 pixel lot (long side).
+
+    Returns:
+        List[List[[float, float]]] 2D-Array, relaxed points. Here the first dimension of the array
+                          encodes the clases in the data. So for a single-class blue noise plot,
+                          len(blue_noise_plot) would be 1.
+                          Each of these arrays contains arrays with points within this class.
     """
     return __plot(x=x, hue=hue, data=data, dodge=dodge, orient=orient, plot_width=plot_width,
                   color=color, palette=palette, size=size, filename=filename,
@@ -258,9 +276,18 @@ def blue_noise(x=None, hue=None, data=None, dodge=False, orient='v', plot_width=
         size (float): The marker size in points**2.
         centralized (boolean): Optional. Where the plot should be centralized or not.
                                Defaults to False.
-        filename (str): Filename of the plot.
+        plot_width (float): Optional. Width of the plot. This is a ratio, assuming the encoding axis
+                            is between 0 and 1. So, 0.2 for plot_width would give you a plot with is
+                            5 times as wide in the encoding axis as in the non-encoding axis.
+        filename (str): Optional. Filename of the plot to render.
         scaling (int): Optional. Scaling for the size of plot.
                        Defaults to 10 for a 740 pixel lot (long side).
+
+    Returns:
+        List[List[[float, float]]] 2D-Array, relaxed points. Here the first dimension of the array
+                          encodes the clases in the data. So for a single-class blue noise plot,
+                          len(blue_noise_plot) would be 1.
+                          Each of these arrays contains arrays with points within this class.
     """
     return __plot(x=x, hue=hue, data=data, dodge=dodge, orient=orient, plot_width=plot_width,
                   color=color, palette=palette, size=size, centralized=centralized,

@@ -46,14 +46,14 @@ def example_plots(orient, size, num_example):
             filename = dataset['name'] + '_' + dataset['x'] + '_' + str(rep)
 
             num_entries = int(data.shape[0])
-            data = data.sample(n=num_entries, replace=False)
+            data = data.sample(n=int(num_entries * 0.6), replace=False)
             data = data.dropna(subset=[dataset['x']])
 
             if dataset['name'] == 'titanic' and dataset['x'] == 'fare':
                 data = data[data['fare'] < 500]
 
-            jitter(x=dataset['x'], data=data, orient=orient, size=size,
-                   filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
+            # jitter(x=dataset['x'], data=data, orient=orient, size=size,
+            #        filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
             blue_noise(x=dataset['x'], data=data, orient=orient, size=size,
                        filename=sub_folder / str(filename + '_bn_' + FILE_TYPE))
             blue_noise(x=dataset['x'], data=data, orient=orient, size=size, centralized=True,
@@ -68,14 +68,10 @@ def example_plots(orient, size, num_example):
         sleep['total sleep'] = pd.to_numeric(sleep['total sleep'], downcast="float")
 
         filename = 'sleep_total_sleep_jitter' + str(rep)
-        jitter(x='total sleep', data=sleep, orient=orient, size=size,
-               filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
-
-        filename = 'sleep_total_sleep_bn_' + str(rep)
+        # jitter(x='total sleep', data=sleep, orient=orient, size=size,
+        #        filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
         blue_noise(x='total sleep', data=sleep, orient=orient, size=size,
                    filename=sub_folder / str(filename + '_bn_' + FILE_TYPE))
-
-        filename = 'sleep_total_sleep_cent_' + str(rep)
         blue_noise(x='total sleep', data=sleep, orient=orient, size=size, centralized=True,
                    filename=sub_folder / str(filename + '_cent_' + FILE_TYPE))
 
@@ -102,8 +98,8 @@ def example_plots(orient, size, num_example):
                 data = data[data['fare'] < 500]
 
             filename = dataset['name'] + '_' + dataset['x'] + '_' + dataset['hue'] + '_' + str(rep)
-            jitter(x=dataset['x'], hue=dataset['hue'], data=data, orient=orient, size=size,
-                   filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
+            # jitter(x=dataset['x'], hue=dataset['hue'], data=data, orient=orient, size=size,
+            #        filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
             blue_noise(x=dataset['x'], hue=dataset['hue'], data=data, orient=orient, size=size,
                        filename=sub_folder / str(filename + '_bn_' + FILE_TYPE))
             blue_noise(x=dataset['x'], hue=dataset['hue'], data=data, orient=orient, size=size,
@@ -118,8 +114,8 @@ def example_plots(orient, size, num_example):
         subset = covid[covid['cat'].isin(['A', 'B', 'D'])]
 
         filename = 'covid_viralload_' + str(rep)
-        jitter(x='Y', hue='cat', data=subset, orient=orient, size=size,
-               filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
+        # jitter(x='Y', hue='cat', data=subset, orient=orient, size=size,
+        #        filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
         blue_noise(x='Y', hue='cat', data=subset, orient=orient, size=size,
                    filename=sub_folder / str(filename + '_bn_' + FILE_TYPE))
         blue_noise(x='Y', hue='cat', data=subset, orient=orient, size=size, centralized=True,
@@ -129,14 +125,12 @@ def example_plots(orient, size, num_example):
         print('gapminder')
 
         filename = 'gapminder_exp_continent_' + str(rep)
-        jitter(x='lifeExp', hue='continent', data=subset,
-               orient=orient, size=size,
-               filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
-
+        # jitter(x='lifeExp', hue='continent', data=subset,
+        #        orient=orient, size=size,
+        #        filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
         blue_noise(x='lifeExp', hue='continent', data=subset,
                    orient=orient, size=size,
                    filename=sub_folder / str(filename + '_bn_' + FILE_TYPE))
-
         blue_noise(x='lifeExp', hue='continent', data=subset,
                    orient=orient, size=size, centralized=True,
                    filename=sub_folder / str(filename + '_cent_' + FILE_TYPE))
@@ -187,9 +181,8 @@ def example_plots(orient, size, num_example):
             num_entries = int(data.shape[0] * 0.8)
             data = data.sample(n=num_entries, replace=False)
             data = data.dropna(subset=[dataset['x']])
-
-            jitter(x=dataset['x'], data=data, orient=orient, size=size,
-                   filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
+            # jitter(x=dataset['x'], data=data, orient=orient, size=size,
+            #        filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
             blue_noise(x=dataset['x'], data=data, orient=orient, size=size,
                        filename=sub_folder / str(filename + '_bn_' + FILE_TYPE))
 
@@ -205,8 +198,8 @@ def example_plots(orient, size, num_example):
         subset = subset.sample(n=num_entries, replace=False)
 
         filename = 'cars_mpg_cylinders_' + str(rep)
-        jitter(x='mpg', hue='cylinders', data=subset, orient=orient, size=size,
-               filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
+        # jitter(x='mpg', hue='cylinders', data=subset, orient=orient, size=size,
+        #        filename=sub_folder / str(filename + '_jitter_' + FILE_TYPE))
         blue_noise(x='mpg', hue='cylinders', data=subset, orient=orient, size=size,
                    filename=sub_folder / str(filename + '_bn_' + FILE_TYPE))
         blue_noise(x='mpg', hue='cylinders', data=subset, orient=orient, size=size, centralized=True,
@@ -272,7 +265,25 @@ def example_plots(orient, size, num_example):
         multiclass_dodge(orient, size, i)
         num_points(orient, size, i)
 
-    plot(num_example)
+    mpg_filename = 'csv_data/auto-mpg.data'
+    column_names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight',
+                    'acceleration', 'year', 'origin', 'name']
+    mpg = pd.read_csv(mpg_filename, delim_whitespace=True, names=column_names)
+    subset = mpg[mpg['cylinders'].isin([4, 6, 8])]
+
+    # Blue noise plot of `subset`, using our automatic width computation
+    points = blue_noise(x='mpg', data=subset, orient='h')
+    print('Num Classes: ', len(points))
+    print('Num Points: ', len(points[0]))
+
+    points = blue_noise(x='mpg', hue='cylinders', data=subset, orient='h')
+    print('Num Classes: ', len(points))
+    print('Num Points: ', len(points[0]))
+    print('Num Points: ', len(points[1]))
+    print('Num Points: ', len(points[2]))
+
+    # Blue noise plot of `subset`, using predefined width.
+    points = blue_noise(x='mpg', data=subset, orient='h', plot_width=0.3)
 
     # basic plot without rendering
     dataset = { 'name': 'geyser', 'x': 'duration' }
@@ -292,6 +303,7 @@ def example_plots(orient, size, num_example):
     points = blue_noise(x=dataset['x'], hue=dataset['hue'], data=sub, orient=orient)
     print('num classes: ', len(points))
 
+    plot(num_example)
 
 def main():
     orient = 'h'

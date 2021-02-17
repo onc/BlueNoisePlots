@@ -39,7 +39,24 @@ column_names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight',
 mpg = pd.read_csv(mpg_filename, delim_whitespace=True, names=column_names)
 subset = mpg[mpg['cylinders'].isin([4, 6, 8])]
 
-# Draw
+
+# Blue noise plot of `subset`, using our automatic width computation
+points = blue_noise(x='mpg', data=subset, orient='h')
+print('Num Classes: ', len(points))   # Num Classes:  1
+print('Num Points: ', len(points[0])) # Num Points:  391
+
+points = blue_noise(x='mpg', hue='cylinders', data=subset, orient='h')
+print('Num Classes: ', len(points))   # Num Classes:  3
+print('Num Points: ', len(points[0])) # Num Points:  204
+print('Num Points: ', len(points[1])) # Num Points:  103
+print('Num Points: ', len(points[2])) # Num Points:  84
+
+points = blue_noise(x='mpg', hue='cylinders', data=subset, orient='h')
+
+# Blue noise plot of `subset`, using predefined width.
+points = blue_noise(x='mpg', hue='cylinders', data=subset, orient='h', plot_width=0.3)
+
+# Render png of the distribution
 blue_noise(x='mpg', hue='cylinders', data=subset, orient='h', size=20, filename='mpg-blue_noise_plot.png')
 ```
 
