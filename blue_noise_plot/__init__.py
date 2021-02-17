@@ -66,9 +66,8 @@ def __prepare_data(x=None, hue=None, data=None):
     }
 
 
-def __plot(x=None, hue=None, data=None, dodge=False,
-           orient=None, color='black', palette='tab10', size=3,
-           centralized=False, filename='', scaling=10, method=''):
+def __plot(x=None, hue=None, data=None, dodge=False, orient=None, color='black', palette='tab10',
+           size=3, centralized=False, plot_width=None, filename='', scaling=10, method=''):
     """ Renders a plot from the given data.
 
     Args:
@@ -99,13 +98,20 @@ def __plot(x=None, hue=None, data=None, dodge=False,
 
     prepared_data = __prepare_data(x=x, hue=hue, data=data)
     if dodge:
-        single_class_plot_width = max(__calculate_plot_width(
-            prepared_data['points'], prepared_data['points_per_class']))
+        if not plot_width:
+            single_class_plot_width = max(__calculate_plot_width(
+                prepared_data['points'], prepared_data['points_per_class']))
+        else:
+            single_class_plot_width = plot_width
         # - dodge_margin in the end, because on margin after the last one
         plot_limits = (len(prepared_data['points_per_class']) *
                        (single_class_plot_width + dodge_margin)) - dodge_margin
     else:
-        single_class_plot_width = __calculate_plot_width(prepared_data['points'])
+        # check, if a width was given, or a automatic width should be calculated
+        if not plot_width:
+            single_class_plot_width = __calculate_plot_width(prepared_data['points'])
+        else:
+            single_class_plot_width = plot_width
         plot_limits = single_class_plot_width
 
     if method == 'blue_noise':
@@ -150,11 +156,13 @@ def __plot(x=None, hue=None, data=None, dodge=False,
         # classes with more points get more prominent colors.
         points_for_class.sort(key=len, reverse=True)
 
-
     # Prepare figure
     my_dpi = 96
     padding = 0.02
     fig_size = __compute_fig_size(plot_limits, orient, scaling)
+
+    if not filename:
+        return points_for_class
 
     plt.figure(figsize=fig_size, dpi=my_dpi)
 
@@ -191,8 +199,10 @@ def __plot(x=None, hue=None, data=None, dodge=False,
     plt.clf()
     plt.close()
 
+    return points_for_class
 
-def jitter(x=None, hue=None, data=None, dodge=False, orient='v',
+
+def jitter(x=None, hue=None, data=None, dodge=False, orient='v', plot_width=None,
            color='black', palette='tab10', size=3, filename='', scaling=10):
     """ Renders a Jitter Plot from the given data.
 
@@ -219,12 +229,12 @@ def jitter(x=None, hue=None, data=None, dodge=False, orient='v',
         scaling (int): Optional. Scaling for the size of plot.
                        Defaults to 10 for a 740 pixel lot (long side).
     """
-    __plot(x=x, hue=hue, data=data, dodge=dodge, orient=orient,
-           color=color, palette=palette, size=size, filename=filename,
-           scaling=scaling, method='jitter')
+    return __plot(x=x, hue=hue, data=data, dodge=dodge, orient=orient, plot_width=plot_width,
+                  color=color, palette=palette, size=size, filename=filename,
+                  scaling=scaling, method='jitter')
 
 
-def blue_noise(x=None, hue=None, data=None, dodge=False, orient='v',
+def blue_noise(x=None, hue=None, data=None, dodge=False, orient='v', plot_width=None,
                color='black', palette='tab10', size=3, centralized=False,
                filename='', scaling=10):
     """ Renders a *Blue Noise Plot* from the given data.
@@ -252,6 +262,6 @@ def blue_noise(x=None, hue=None, data=None, dodge=False, orient='v',
         scaling (int): Optional. Scaling for the size of plot.
                        Defaults to 10 for a 740 pixel lot (long side).
     """
-    __plot(x=x, hue=hue, data=data, dodge=dodge, orient=orient,
-           color=color, palette=palette, size=size, centralized=centralized,
-           filename=filename, scaling=scaling, method='blue_noise')
+    return __plot(x=x, hue=hue, data=data, dodge=dodge, orient=orient, plot_width=plot_width,
+                  color=color, palette=palette, size=size, centralized=centralized,
+                  filename=filename, scaling=scaling, method='blue_noise')
