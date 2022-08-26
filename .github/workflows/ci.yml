@@ -21,8 +21,8 @@ jobs:
 
       - name: Setup Node ${{ matrix.node }}
         uses: actions/setup-python@v4
-  	    with:
-    	    python-version: ${{ matrix.node }}
+        with:
+          python-version: ${{ matrix.node }}
           
       - name: Change into examples directory
         run: cd examples
