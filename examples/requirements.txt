@@ -9,7 +9,7 @@ fonttools==4.37.1
 gapminder==0.1
 gast==0.4.0
 google-auth==2.11.0
-google-auth-oauthlib==0.4.6
+google-auth-oauthlib==0.5.2
 google-pasta==0.2.0
 grpcio==1.47.0
 h5py==3.7.0
