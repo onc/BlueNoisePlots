@@ -4,7 +4,7 @@ cachetools==5.2.0
 certifi==2022.6.15
 charset-normalizer==2.1.1
 flatbuffers==1.12
-gast==0.4.0
+gast==0.5.3
 google-auth==2.11.0
 google-auth-oauthlib==0.4.6
 google-pasta==0.2.0
