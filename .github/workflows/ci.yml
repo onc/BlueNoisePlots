@@ -12,19 +12,18 @@ jobs:
 
     strategy:
       matrix:
-        node: [14, 16, 18]
+        node: ['3.8', '3.9', '3.10']
 
     name: Node ${{ matrix.node }}
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup python
-      - uses: actions/setup-python@v4
-  	with:
-    	  python-version: '3.10' 
-      - run: python my_script.py
-
+      - name: Setup Node ${{ matrix.node }}
+        uses: actions/setup-python@v4
+  	    with:
+    	    python-version: ${{ matrix.node }}
+          
       - name: Change into examples directory
         run: cd examples
 
