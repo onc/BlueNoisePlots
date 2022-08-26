@@ -24,11 +24,10 @@ jobs:
         with:
           python-version: ${{ matrix.node }}
           
-      - name: Change into examples directory
-        run: cd examples
-
       - name: Install dependencies
+        working-directory: ./examples
         run: pip install -r requirements.txt
 
       - name: Generate examples
+        working-directory: ./examples
         run: python example_plots.py
