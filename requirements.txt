@@ -11,7 +11,7 @@ google-pasta==0.2.0
 grpcio==1.48.1
 h5py==3.7.0
 idna==3.3
-keras==2.9.0
+keras==2.10.0
 Keras-Preprocessing==1.1.2
 libclang==14.0.6
 Markdown==3.4.1
